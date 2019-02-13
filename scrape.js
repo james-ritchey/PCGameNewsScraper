@@ -4,6 +4,7 @@
 
 var cheerio = require("cheerio");
 var axios = require("axios");
+var db = require("./models");
 var Scraper = {
     scrape: function(page) {
         // Make a request via axios to grab the HTML body from the site of your choice
@@ -25,18 +26,18 @@ var Scraper = {
             var author = $(element).find("span.by-author").text();
             author = author.split("\n");
             author.forEach(function(item, index) {
-            if(item === '') {
-                author.splice(index, 1);
-            }
+                if(item === '') {
+                    author.splice(index, 1);
+                }
             });
             author = author.join(" ");
 
             var synopsis = $(element).find("p.synopsis").text();
             synopsis = synopsis.split("\n");
             synopsis.forEach(function(item, index) {
-            if(item === '' || item.toLowerCase() === 'news') {
-                synopsis.splice(index, 1);
-            }
+                if(item === '' || item.toLowerCase() === 'news') {
+                    synopsis.splice(index, 1);
+                }
             });
             synopsis = synopsis.join(" ");
 
@@ -45,16 +46,31 @@ var Scraper = {
 
             // Save these results in an object that we'll push into the results array we defined earlier
             results.push({
-            title: title,
-            author: author,
-            synopsis: synopsis,
-            link: link,
-            img: img
+                title: title,
+                author: author,
+                synopsis: synopsis,
+                link: link,
+                img: img
             });
         });
 
         // Log the results once you've looped through each of the elements found with cheerio
         console.log(results);
+        results.forEach(function(item) {
+            db.Article.findOne({
+                link: item.link,
+                title: item.title
+            }).then(function(err, data) {
+                if(!data) {
+                    db.Article.create(item).then(function(dbArticle) {
+                        console.log(dbArticle);
+                    })
+                    .catch(function(err) {
+                        console.log(err);
+                    });
+                }
+            });
+            });
         });
     }
 }
