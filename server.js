@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 if(process.env.MONGODB_URI) {
-  mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
+  mongoose.connect(process.env.MONGODB_URI);
 
 }
 else {
