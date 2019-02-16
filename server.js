@@ -79,11 +79,10 @@ app.post("/articles/:id", function(req, res) {
     body: note.body,
     user: note.user
   }).then(function(dbNote) {
+    res.json({noteId: dbNote._id});
     return db.Article.findOneAndUpdate({_id: req.params.id}, { $push: {notes: dbNote._id }}, { new: true });
   }).then(function(dbArticle) {
     res.json(dbArticle);
-  }).catch(function(err) {
-    res.json(err);
   });
 });
 
@@ -101,6 +100,14 @@ app.get("/articles/:id", function(req, res) {
     res.json(err);
   });
 });
+
+app.post("/article/notes/:id", function(req, res) {
+  var id = req.params.id;
+  console.log("Delete: " + id);
+  db.Note.findByIdAndRemove(id).then(function() {
+    res.send("Deleted");
+  });
+})
 
 // Start the server
 app.listen(PORT, function() {

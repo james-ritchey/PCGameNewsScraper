@@ -33,7 +33,13 @@ $(document).on("click", ".article", function() {
         .then(function(data) {
           console.log(data.notes);
           data.notes.forEach(function(item) {
-            $("#comment-list").append($("<div class='comment'><p class='comment-user'>" + item.user + "</p><p class='comment-text'>" + item.body + "</p></div>"))
+            if(item.user === localStorage.getItem("user")){
+              $("#comment-list").append($("<div class='comment' data-id='" + item._id + "'><p class='comment-user'>" + item.user + "  <button type='button' class='delete-comment'>X</button></p><p class='comment-text'>" + item.body + "</p></div>"));
+            }
+            else {
+              $("#comment-list").append($("<div class='comment' data-id='" + item._id + "'><p class='comment-user'>" + item.user + "</p><p class='comment-text'>" + item.body + "</p></div>"));
+            }
+
           })
         });
 
@@ -57,8 +63,9 @@ $(document).on("click", "#submit", function() {
             body: $("#comment-input").val(),
             user: localStorage.getItem("user"),
           }
-        }).then(function() {
-          $("#comment-list").append($("<div class='comment'><p class='comment-user'>" + localStorage.getItem("user") + "</p><p class='comment-text'>" + $("#comment-input").val() + "</p></div>"))
+        }).then(function(data) {
+          console.log(data);
+          $("#comment-list").append($("<div class='comment' data-id='" + data.noteId + "'><p class='comment-user'>" + localStorage.getItem("user") + "  <button type='button' class='delete-comment'>X</button></p><p class='comment-text'>" + $("#comment-input").val() + "</p></div>"));
           $("#comment-input").val("");
         });
   }
@@ -77,4 +84,14 @@ $(document).on("click", "#scrape", function() {
     method: "GET",
     url: "/scrape/"
   });
+})
+
+$(document).on("click", ".delete-comment", function() {
+  var noteId = $(this).parents("div.comment").attr("data-id");
+  console.log("NoteID: " + noteId);
+  $.ajax({
+    method: "POST",
+    url: "/article/notes/" + noteId
+  });
+  $(this).parents("div.comment").remove();
 })
