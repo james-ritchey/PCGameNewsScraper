@@ -5,8 +5,10 @@
 var cheerio = require("cheerio");
 var axios = require("axios");
 var db = require("./models");
+var results = [];
 var Scraper = {
     scrape: function(page) {
+        results = [];
         // Make a request via axios to grab the HTML body from the site of your choice
         axios.get("https://www.pcgamer.com/news/page/" + page).then(function(response) {
 
@@ -14,7 +16,6 @@ var Scraper = {
         // '$' becomes a shorthand for cheerio's selector commands, much like jQuery's '$'
         var $ = cheerio.load(response.data);
         // An empty array to save the data that we'll scrape
-        var results = [];
 
         // Select each element in the HTML body from which you want information.
         // NOTE: Cheerio selectors function similarly to jQuery's selectors,
@@ -53,23 +54,21 @@ var Scraper = {
                 img: img
             });
         });
-
-        // Log the results once you've looped through each of the elements found with cheerio
-        console.log(results);
-        results.forEach(function(item) {
-            db.Article.findOne({
-                link: item.link,
-                title: item.title
-            }).then(function(err, data) {
-                if(!data) {
-                    db.Article.create(item).then(function(dbArticle) {
-                        console.log(dbArticle);
-                    })
-                    .catch(function(err) {
-                        console.log(err);
-                    });
-                }
-            });
+        }).then(function() {
+            //console.log(results);
+            results.forEach(function(item) {
+                db.Article.find({
+                    link: item.link,
+                    title: item.title
+                }).then(function(data) {
+                    console.log("Looking for dupes");
+                    console.log(data.length);
+                    if(data.length === 0) {
+                        db.Article.create(item).then(function(dbArticle) {
+                            console.log(dbArticle);
+                        });
+                    }
+                });
             });
         });
     }

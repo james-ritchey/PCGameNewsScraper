@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PCGNS</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="app.js"></script>
+        <link rel="stylesheet" type="text/css" href="./assets/styling/style.css">
+
+    </head>
+
+    <header>
+        <h1>PC Gaming News Scraper</h1>
+        <h3>Catch up on the latest PC gaming news</h3>
+        <button id="scrape" type="button">Scrape New Articles</button>
+    </header>
+
+    <body>
+        <div class="container">
+            <div id="article-list">
+
+            </div>
+            <div id="active-article" style="display:none">
+
+            </div>
+            <div id="comment-section" style="display:none">
+                <h3>Comments</h3>
+                <div id="comment-list">
+
+                </div>
+                <div id="comment-submit">
+                    <textarea type="text" id="comment-input" placeholder="Type out your thoughts..."></textarea><br>
+                    <input id="submit" type="submit" value="Submit">
+                    <button id="back" type="button">Back</button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
