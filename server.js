@@ -32,6 +32,15 @@ else {
   mongoose.connect("mongodb://localhost/scrapedPCGamingArticles", { useNewUrlParser: true });
 }
 
+var dbc = mongoose.connection;
+
+dbc.on('error', function(err) {
+  console.log('Mongoose error ' + err);
+});
+dbc.once('open', function() {
+  console.log('Mongoose connection successful');
+})
+
 
 // Routes
 app.get("/", function(req, res) {
