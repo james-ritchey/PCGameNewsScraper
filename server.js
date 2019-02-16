@@ -23,8 +23,15 @@ app.use(express.json());
 // Make public a static folder
 app.use(express.static("public"));
 
-// Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/scrapedPCGamingArticles", { useNewUrlParser: true });
+if(process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
+
+}
+else {
+  // Connect to the Mongo DB
+  mongoose.connect("mongodb://localhost/scrapedPCGamingArticles", { useNewUrlParser: true });
+}
+
 
 // Routes
 app.get("/", function(req, res) {
