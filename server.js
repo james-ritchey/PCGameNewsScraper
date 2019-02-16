@@ -1,5 +1,5 @@
 var scraper = require("./scraper");
-
+require("dotenv").config();
 // Add code to userModel.js to complete the model
 
 var express = require("express");
