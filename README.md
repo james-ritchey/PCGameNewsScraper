@@ -1,5 +1,5 @@
 # PCGameNewsScraper
-A web scraper collecting PC game related news utlizing the Mongoose ODM for a Mongo database.
+### A web scraper collecting PC game related news utlizing the Mongoose ODM for a Mongo database.
 
 The deployed site can be found [here](https://pcnewsscraper.herokuapp.com/).
 
